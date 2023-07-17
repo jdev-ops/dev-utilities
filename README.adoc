@@ -33,6 +33,10 @@ set-hooks
 |Predefined tasks types
 |feat\|fix\|bugfix\|config\|refactor\|build\|ci\|docs\|test
 
+|TASKS_KEYS
+|Jira tasks regex
+|
+
 |JIRA_EMAIL
 |User email
 |
