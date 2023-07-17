@@ -1,0 +1,57 @@
+= dev-utilities tool
+
+== Install
+
+Over a branch
+
+[source,bash]
+----
+pip install --no-cache-dir -U https://github.com/jdev-ops/dev-utilities/archive/develop.zip
+----
+
+Over a specific version
+
+[source,bash]
+----
+pip install --no-cache-dir -U https://github.com/jdev-ops/dev-utilities/archive/refs/tags/v0.1.tar.gz
+----
+
+== Setup
+
+[source,bash]
+----
+set-hooks
+----
+
+== Environment variables needed
+
+[cols="1,1,1"]
+|===
+|Variable name |Description |default value
+
+|TASKS_TYPES
+|Predefined tasks types
+|feat\|fix\|bugfix\|config\|refactor\|build\|ci\|docs\|test
+
+|JIRA_EMAIL
+|User email
+|
+
+|JIRA_TOKEN
+|Jira user token
+|
+
+|JIRA_BOARD
+|Jira board in use
+|33
+
+|JIRA_BASE_URL
+|Jira base url
+|
+
+|===
+
+
+
+
+
