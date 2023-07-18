@@ -8,10 +8,10 @@ config = Config(RepositoryEnv(".env.local"))
 
 git_executable = ["git"]
 
-SIG_COMMIT = config("SIG_COMMIT")
-ALLOWED_SIGNERS_FILE = config("ALLOWED_SIGNERS_FILE")
-ACTIVE_EMAIL = config("ACTIVE_EMAIL")
-ACTIVE_SIGNING_KEY = config("ACTIVE_SIGNING_KEY")
+SIG_COMMIT = config("SIG_COMMIT", default=None)
+ALLOWED_SIGNERS_FILE = config("ALLOWED_SIGNERS_FILE", default=None)
+ACTIVE_EMAIL = config("ACTIVE_EMAIL", default=None)
+ACTIVE_SIGNING_KEY = config("ACTIVE_SIGNING_KEY", default=None)
 
 try:
     subprocess.check_output(["git", "config", "--get", "commit.gpgsign"])
