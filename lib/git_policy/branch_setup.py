@@ -110,7 +110,7 @@ def main():
                     continue
                 else:
                     branch_name = f"{values['Type']}/{values['Task selection']}-{values['Description']}"
-                    print(f"git switch -c {branch_name}")
+                    # print(f"git switch -c {branch_name}")
 
                     subprocess.run(
                         ["git", "switch", "-c", branch_name],
@@ -119,7 +119,7 @@ def main():
                     )
 
                     subprocess.run(
-                        ["git", "ph", "-u", "origin", branch_name],
+                        ["git", "push", "-u", "origin", branch_name],
                         stdout=subprocess.PIPE,
                         text=True,
                     )

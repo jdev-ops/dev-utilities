@@ -56,7 +56,8 @@ if __name__ == "__main__":
                 cmd = git_executable + ["verify-commit", "-v", sha]
                 res = subprocess.check_output(cmd)
             except subprocess.CalledProcessError as e:
-                print(e)
+                # print(e)
+                print(f"Commit {sha} is not signed")
                 sys.exit(1)
 
 

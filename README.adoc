@@ -2,6 +2,11 @@
 
 == Install
 
+Install gum:
+
+https://github.com/charmbracelet/gum
+
+
 Over a branch
 
 [source,bash]
