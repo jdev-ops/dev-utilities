@@ -15,7 +15,7 @@ def main():
     JIRA_TOKEN = config("JIRA_TOKEN")
     JIRA_BOARD = config("JIRA_BOARD", default="33")
     JIRA_BASE_URL = config("JIRA_BASE_URL")
-    STATUS_NAME = config("STATUS_NAME", default="En curso")
+    JIRA_TASK_STATUS_VALUE = config("JIRA_TASK_STATUS_VALUE", default="En curso")
     TASKS_TYPES = config(
         "TASKS_TYPES",
         default="feat|fix|bugfix|config|refactor|build|ci|docs|test",
@@ -51,17 +51,26 @@ def main():
 
     data = json.loads(response.text)
 
-    options = []
+    options = {}
     for iss in data["issues"]:
         if (
-            iss["fields"]["status"]["name"] == STATUS_NAME
+            iss["fields"]["status"]["name"] == JIRA_TASK_STATUS_VALUE
             and iss["fields"]["assignee"]["emailAddress"] == JIRA_EMAIL
         ):
-            options.append(iss["key"])
+            options.update({iss["key"]: iss["fields"]["summary"]})
 
-    menu = ["Task selection", "Description", "Type", "Apply and exit"]
-    values = {"Task selection": None, "Description": None, "Type": None}
     description = ""
+    menu = ["Description", "Type", "Apply and exit"]
+    values = {"Task selection": None, "Description": None, "Type": None}
+    if len(options) == 0:
+        print("No active tasks found")
+        sys.exit(1)
+    elif len(options) == 1:
+        value["Task selection"] = options.keys()[0]
+        description = options.values()[0]
+    else:
+        menu.append("Task selection")
+
 
     flag = True
     while flag:
@@ -76,21 +85,27 @@ def main():
                 my_env = os.environ.copy()
                 my_env["GUM_CHOOSE_HEADER"] = f"Choose a task to work on:"
                 opt = subprocess.run(
-                    ["gum", "choose"] + options,
+                    ["gum", "choose"] + options.keys(),
                     stdout=subprocess.PIPE,
                     text=True,
                     env=my_env,
                 )
                 values["Task selection"] = opt.stdout.strip()
+                description = options[values["Task selection"]]
             case "Description":
-                my_env["GUM_INPUT_HEADER"] = f"Enter the description:"
+                my_env["GUM_INPUT_HEADER"] = f"Enter the description (ENTER keeps the default value):"
+                my_env["GUM_INPUT_WIDTH"] = "0"
+                desc = description
+                if desc == "":
+                    desc = "Description"
                 opt = subprocess.run(
-                    ["gum", "input", "--placeholder", """Description"""],
+                    ["gum", "input", "--placeholder", desc],
                     stdout=subprocess.PIPE,
                     text=True,
                     env=my_env,
                 )
-                description = opt.stdout.strip()
+                if opt.stdout.strip() != "":
+                    description = opt.stdout.strip()
                 values["Description"] = slugify(description)
 
             case "Type":
