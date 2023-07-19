@@ -46,6 +46,10 @@ set-hooks
 |User email
 |
 
+|JIRA_TASKS_EMAIL
+|Tasks user email
+|JIRA_EMAIL
+
 |JIRA_TOKEN
 |Jira user token
 |

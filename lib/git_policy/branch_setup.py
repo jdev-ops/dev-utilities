@@ -12,6 +12,7 @@ config = Config(RepositoryEnv(".env.local"))
 
 def main():
     JIRA_EMAIL = config("JIRA_EMAIL")
+    JIRA_TASKS_EMAIL = config("JIRA_TASKS_EMAIL", default=JIRA_EMAIL)
     JIRA_TOKEN = config("JIRA_TOKEN")
     JIRA_BOARD = config("JIRA_BOARD", default="33")
     JIRA_BASE_URL = config("JIRA_BASE_URL")
@@ -38,7 +39,6 @@ def main():
             ["gum", "choose"] + sprints, stdout=subprocess.PIPE, text=True, env=my_env
         )
         current_sprint = result.stdout.strip()
-        pass
     elif len(sprints) == 0:
         print("No active sprint found")
         sys.exit(1)
@@ -55,7 +55,7 @@ def main():
     for iss in data["issues"]:
         if (
             iss["fields"]["status"]["name"] == JIRA_TASK_STATUS_VALUE
-            and iss["fields"]["assignee"]["emailAddress"] == JIRA_EMAIL
+            and iss["fields"]["assignee"]["emailAddress"] == JIRA_TASKS_EMAIL
         ):
             options.update({iss["key"]: iss["fields"]["summary"]})
 
@@ -66,11 +66,10 @@ def main():
         print("No active tasks found")
         sys.exit(1)
     elif len(options) == 1:
-        value["Task selection"] = options.keys()[0]
-        description = options.values()[0]
+        values["Task selection"] = list(options.keys())[0]
+        description = list(options.values())[0]
     else:
-        menu.append("Task selection")
-
+        menu.insert(0, "Task selection")
 
     flag = True
     while flag:
@@ -85,7 +84,7 @@ def main():
                 my_env = os.environ.copy()
                 my_env["GUM_CHOOSE_HEADER"] = f"Choose a task to work on:"
                 opt = subprocess.run(
-                    ["gum", "choose"] + options.keys(),
+                    ["gum", "choose"] + list(options.keys()),
                     stdout=subprocess.PIPE,
                     text=True,
                     env=my_env,
@@ -93,7 +92,9 @@ def main():
                 values["Task selection"] = opt.stdout.strip()
                 description = options[values["Task selection"]]
             case "Description":
-                my_env["GUM_INPUT_HEADER"] = f"Enter the description (ENTER keeps the default value):"
+                my_env[
+                    "GUM_INPUT_HEADER"
+                ] = f"Enter the description (ENTER keeps the default value):"
                 my_env["GUM_INPUT_WIDTH"] = "0"
                 desc = description
                 if desc == "":
