@@ -55,7 +55,7 @@ if __name__ == "__main__":
         ]
 
         message = subprocess.check_output(cmd)
-        for sha in message.decode("UTF-8").split("\n")[:-2]:
+        for sha in message.decode("UTF-8").split("\n"):
             cmd = git_executable + [
                 "show",
                 "-s",
