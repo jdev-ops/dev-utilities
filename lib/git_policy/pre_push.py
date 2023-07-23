@@ -13,6 +13,9 @@ ALLOWED_SIGNERS_FILE = config("ALLOWED_SIGNERS_FILE", default=None)
 ACTIVE_EMAIL = config("ACTIVE_EMAIL", default=None)
 ACTIVE_SIGNING_KEY = config("ACTIVE_SIGNING_KEY", default=None)
 
+JIRA_EMAIL = config("JIRA_EMAIL")
+JIRA_TASKS_EMAIL = config("JIRA_TASKS_EMAIL", default=JIRA_EMAIL)
+
 try:
     subprocess.check_output(["git", "config", "--get", "commit.gpgsign"])
 except subprocess.CalledProcessError as e:
@@ -50,8 +53,36 @@ if __name__ == "__main__":
             local_sha1,
             f"^{remote_sha1}",
         ]
+
         message = subprocess.check_output(cmd)
-        for sha in message.decode("UTF-8").split("\n"):
+        for sha in message.decode("UTF-8").split("\n")[:-2]:
+            cmd = git_executable + [
+                "show",
+                "-s",
+                "--format=%ae",
+                sha,
+            ]
+
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+
+            res = res.stdout.strip().split("\n")
+            if JIRA_TASKS_EMAIL not in res:
+                print(f"`{sha}` is not my commit, skipping")
+                continue
+
+            cmd = git_executable + [
+                "show",
+                sha,
+            ]
+
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+
+            res = res.stdout.strip().split("\n")
+            if res[1].startswith("Merge:"):
+                print(f"`{sha}` is a merge commit, skipping")
+                continue
+
+            print(f"Verifying commit {sha}")
             try:
                 cmd = git_executable + ["verify-commit", "-v", sha]
                 res = subprocess.check_output(cmd)
