@@ -69,6 +69,7 @@ set-hooks
 
 image::env-vars-search-path.svg[align="center",width="100%"]
 
-
-
-
+[NOTE]
+====
+These utilities respect the unix way. Therefore, environment variables have precedence over config files.
+====
