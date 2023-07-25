@@ -2,6 +2,7 @@
 
 import sys
 import subprocess
+import os
 from pathlib import Path
 from decouple import config as decouple_config
 from decouple import Config, RepositoryEnv
