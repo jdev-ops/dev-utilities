@@ -83,13 +83,14 @@ def main():
             case "Task selection":
                 my_env = os.environ.copy()
                 my_env["GUM_CHOOSE_HEADER"] = f"Choose a task to work on:"
+                current_tasks = [f"{k}: {v}" for k, v in options.items()]
                 opt = subprocess.run(
-                    ["gum", "choose"] + list(options.keys()),
+                    ["gum", "choose"] + current_tasks,
                     stdout=subprocess.PIPE,
                     text=True,
                     env=my_env,
                 )
-                values["Task selection"] = opt.stdout.strip()
+                values["Task selection"] = opt.stdout.strip().split(":")[0].strip()
                 description = options[values["Task selection"]]
             case "Description":
                 my_env[
