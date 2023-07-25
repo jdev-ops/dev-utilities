@@ -1,4 +1,5 @@
 = dev-utilities tool
+:imagesdir: docs
 
 == Install
 
@@ -64,6 +65,9 @@ set-hooks
 
 |===
 
+== How to set environment variables
+
+image::env-vars-search-path.svg[align="center",width="100%"]
 
 
 

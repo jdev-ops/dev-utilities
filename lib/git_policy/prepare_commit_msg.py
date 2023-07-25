@@ -5,7 +5,7 @@ from git import Repo
 from slugify import slugify
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:  # ammended commit
+    if len(sys.argv) > 2:  # amended commit
         print("Amending commit, skipping")
         sys.exit(0)
     else:

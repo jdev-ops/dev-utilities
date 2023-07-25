@@ -1,0 +1,15 @@
+title: |md
+  # Environment variables search order
+| { near: top-center }
+
+config_path_exists : env var \"CONFIG_PATH\" exists
+take_from_config_path : Take variables from \$CONFIG_PATH file
+if_local_exists : \".env.local\" exists
+take_from_env: Take variables from \".env\" file
+take_from_env_local: Take variables from \".env.local\" file
+
+config_path_exists -> take_from_config_path : yes
+config_path_exists -> if_local_exists : no
+
+if_local_exists -> take_from_env : no
+if_local_exists -> take_from_env_local : yes
