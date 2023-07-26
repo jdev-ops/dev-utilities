@@ -49,7 +49,7 @@ set-hooks
 
 |JIRA_TASKS_EMAIL
 |Tasks user email
-|JIRA_EMAIL
+|${JIRA_EMAIL}
 
 |JIRA_TOKEN
 |Jira user token
