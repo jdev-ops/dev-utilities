@@ -13,6 +13,7 @@ from pathlib import Path
 from decouple import config as decouple_config
 from decouple import Config, RepositoryEnv
 
+import cattrs
 
 if os.environ.get("CONFIG_PATH"):
     config = Config(RepositoryEnv(os.environ["CONFIG_PATH"]))
