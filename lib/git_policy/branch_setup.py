@@ -2,18 +2,25 @@ import sys
 import json
 import subprocess
 import os
+
 import requests
 from requests.auth import HTTPBasicAuth
+
 from slugify import slugify
+
 from pathlib import Path
+
 from decouple import config as decouple_config
 from decouple import Config, RepositoryEnv
+
+
 if os.environ.get("CONFIG_PATH"):
     config = Config(RepositoryEnv(os.environ["CONFIG_PATH"]))
 elif Path(".env.local").is_file():
-        config = Config(RepositoryEnv(".env.local"))
+    config = Config(RepositoryEnv(".env.local"))
 else:
-        config = decouple_config
+    config = decouple_config
+
 
 def main():
     JIRA_EMAIL = config("JIRA_EMAIL")
@@ -31,11 +38,20 @@ def main():
     BASIC_AUTH = HTTPBasicAuth(JIRA_EMAIL, JIRA_TOKEN)
     HEADERS = {"Content-Type": "application/json;charset=iso-8859-1"}
     response = requests.get(API_URL, headers=HEADERS, auth=BASIC_AUTH)
-    all_sprints = json.loads(response.text)
+    if response.status_code != 200:
+        print(f"Error from Jira: {response.status_code}")
+        sys.exit(1)
+
+    try:
+        all_sprints = cattrs.structure(response.json(), Sprints)
+    except cattrs.errors.ClassValidationError as ve:
+        print(f"Incorrect response from: {API_URL}")
+
     sprints = []
-    for iss in all_sprints["values"]:
-        if iss["state"] == "active":
-            sprints.append(iss["id"])
+    for sprint in all_sprints.values:
+        if sprint.state == "active":
+            sprints.append(sprint.id)
+
     current_sprint = sprints[0]
     if len(sprints) > 1:
         my_env = os.environ.copy()
@@ -54,15 +70,22 @@ def main():
     HEADERS = {"Content-Type": "application/json;charset=iso-8859-1"}
     response = requests.get(API_URL, headers=HEADERS, auth=BASIC_AUTH)
 
-    data = json.loads(response.text)
+    if response.status_code != 200:
+        print(f"Error from Jira: {response.status_code}")
+
+    try:
+        all_issues = cattrs.structure(response.json(), Issues).issues
+    except cattrs.errors.ClassValidationError as ve:
+        print(f"Incorrect response from: {API_URL}")
 
     options = {}
-    for iss in data["issues"]:
+    for issue in all_issues:
         if (
-            iss["fields"]["status"]["name"] == JIRA_TASK_STATUS_VALUE
-            and iss["fields"]["assignee"]["emailAddress"] == JIRA_TASKS_EMAIL
+            issue.fields.assignee is not None
+            and issue.fields.status.name == JIRA_TASK_STATUS_VALUE
+            and issue.fields.assignee.emailAddress == JIRA_TASKS_EMAIL
         ):
-            options.update({iss["key"]: iss["fields"]["summary"]})
+            options.update({issue.key: issue.fields.summary})
 
     description = ""
     menu = ["Description", "Type", "Apply and exit"]
