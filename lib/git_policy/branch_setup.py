@@ -45,11 +45,12 @@ def main():
         print(f"Error from Jira: {response.status_code}")
         sys.exit(1)
 
-    try:
-        all_sprints = cattrs.structure(response.json(), Sprints)
-    except cattrs.errors.ClassValidationError as ve:
-        print(f"Incorrect response from: {API_URL}")
+    # try:
+    #     all_sprints = cattrs.structure(response.json(), Sprints)
+    # except cattrs.errors.ClassValidationError as ve:
+    #     print(f"Incorrect response from: {API_URL}")
 
+    all_sprints = cattrs.structure(response.json(), Sprints)
     sprints = []
     for sprint in all_sprints.values:
         if sprint.state == "active":
@@ -75,12 +76,14 @@ def main():
 
     if response.status_code != 200:
         print(f"Error from Jira: {response.status_code}")
+        sys.exit(1)
 
-    try:
-        all_issues = cattrs.structure(response.json(), Issues).issues
-    except cattrs.errors.ClassValidationError as ve:
-        print(f"Incorrect response from: {API_URL}")
+    # try:
+    #     all_issues = cattrs.structure(response.json(), Issues).issues
+    # except cattrs.errors.ClassValidationError as ve:
+    #     print(f"Incorrect response from: {API_URL}")
 
+    all_issues = cattrs.structure(response.json(), Issues).issues
     options = {}
     for issue in all_issues:
         if (
