@@ -15,6 +15,8 @@ from decouple import Config, RepositoryEnv
 
 import cattrs
 
+from git_policy import *
+
 if os.environ.get("CONFIG_PATH"):
     config = Config(RepositoryEnv(os.environ["CONFIG_PATH"]))
 elif Path(".env.local").is_file():
