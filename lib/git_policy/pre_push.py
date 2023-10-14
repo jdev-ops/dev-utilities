@@ -20,7 +20,7 @@ ALLOWED_SIGNERS_FILE = config("ALLOWED_SIGNERS_FILE", default=None)
 ACTIVE_EMAIL = config("ACTIVE_EMAIL", default=None)
 ACTIVE_SIGNING_KEY = config("ACTIVE_SIGNING_KEY", default=None)
 
-JIRA_EMAIL = config("JIRA_EMAIL")
+JIRA_EMAIL = config("JIRA_EMAIL", default=None)
 JIRA_TASKS_EMAIL = config("JIRA_TASKS_EMAIL", default=JIRA_EMAIL)
 
 try:
