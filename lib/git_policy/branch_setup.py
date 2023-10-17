@@ -13,6 +13,7 @@ from pathlib import Path
 from decouple import config as decouple_config
 from decouple import Config, RepositoryEnv
 
+from git import Repo
 import cattrs
 
 from git_policy import *
@@ -26,6 +27,12 @@ else:
 
 
 def main():
+    base_branch = open(".git/devops/base_branch", "r").read().strip()
+    repo = Repo(".")
+    if current_branch != str(repo.active_branch):
+        print(f"You must be in '{base_branch}' branch to run this command")
+        sys.exit(1)
+
     JIRA_EMAIL = config("JIRA_EMAIL")
     JIRA_TASKS_EMAIL = config("JIRA_TASKS_EMAIL", default=JIRA_EMAIL)
     JIRA_TOKEN = config("JIRA_TOKEN")
