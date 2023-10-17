@@ -24,7 +24,7 @@ setuptools.setup(
     include_package_data=True,
     scripts=[
         "bin/setup",
-        "bin/rebase",
+        "bin/update-current-branch",
     ],
     entry_points={
         "console_scripts": [
