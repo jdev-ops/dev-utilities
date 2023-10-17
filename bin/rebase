@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+base_branch=$(cat .git/devops/base_branch)
+curent_branch=$(git rev-parse --abbrev-ref HEAD)
+git stash
+git checkout $base_branch
+git pull --rebase
+git checkout $curent_branch
+git rebase $base_branch
+git stash pop
