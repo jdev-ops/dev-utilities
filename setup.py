@@ -23,7 +23,7 @@ setuptools.setup(
     install_requires=install_requires,
     include_package_data=True,
     scripts=[
-        "bin/set-hooks",
+        "bin/setups",
     ],
     entry_points={
         "console_scripts": [
