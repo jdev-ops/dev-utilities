@@ -29,7 +29,7 @@ else:
 def main():
     base_branch = open(".git/devops/base_branch", "r").read().strip()
     repo = Repo(".")
-    if current_branch != str(repo.active_branch):
+    if base_branch != str(repo.active_branch):
         print(f"You must be in '{base_branch}' branch to run this command")
         sys.exit(1)
 
