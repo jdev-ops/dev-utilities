@@ -26,7 +26,7 @@ pip install --no-cache-dir -U https://github.com/jdev-ops/dev-utilities/archive/
 
 [source,bash]
 ----
-set-hooks
+setup
 ----
 
 == Environment variables needed
