@@ -33,6 +33,7 @@ setuptools.setup(
             "_pre-commit=git_policy.pre_commit:put_as_githook",
             "_prepare-commit-msg=git_policy.prepare_commit_msg:put_as_githook",
             "branch-setup=git_policy.branch_setup:main",
+            "non-jira-branch=git_policy.non_jira_branch:main",
         ],
     },
 )
