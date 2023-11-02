@@ -106,7 +106,6 @@ def main():
                     open(f".git/devops/.{slugify(branch_name)}", "w").write(
                         f"""{values['Type']}: [{values['Task selection']}] {description}
 
-Jira Ticket Link: {JIRA_BASE_URL}/browse/{values['Task selection']}
 """
                     )
                     flag = False
