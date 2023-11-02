@@ -40,7 +40,7 @@ def main():
 
     description = ""
     menu = ["Description", "Type", "Apply and exit"]
-    values = {"Description": None, "Type": None}
+    values = {"Description": None, "Type": None, "Task selection": "ZDLY-00"}
 
     flag = True
     while flag:
@@ -54,11 +54,11 @@ def main():
             case "Description":
                 my_env[
                     "GUM_INPUT_HEADER"
-                ] = f"Enter the description (ENTER keeps the default value):"
+                ] = f"Enter the description:"
                 my_env["GUM_INPUT_WIDTH"] = "0"
                 desc = description
                 if desc == "":
-                    desc = "Description"
+                    desc = "The best task ever"
                 opt = subprocess.run(
                     ["gum", "input", "--placeholder", desc],
                     stdout=subprocess.PIPE,
@@ -87,17 +87,19 @@ def main():
                 else:
                     branch_name = f"{values['Type']}/{values['Task selection']}-{values['Description']}"
 
-                    subprocess.run(
-                        ["git", "switch", "-c", branch_name],
-                        stdout=subprocess.PIPE,
-                        text=True,
-                    )
+                    print(f"Creating branch {branch_name}")
 
-                    subprocess.run(
-                        ["git", "push", "-u", "origin", branch_name],
-                        stdout=subprocess.PIPE,
-                        text=True,
-                    )
+                    # subprocess.run(
+                    #     ["git", "switch", "-c", branch_name],
+                    #     stdout=subprocess.PIPE,
+                    #     text=True,
+                    # )
+                    #
+                    # subprocess.run(
+                    #     ["git", "push", "-u", "origin", branch_name],
+                    #     stdout=subprocess.PIPE,
+                    #     text=True,
+                    # )
 
                     if not os.path.exists(".git/devops"):
                         os.makedirs(".git/devops")
