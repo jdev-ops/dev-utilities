@@ -89,17 +89,17 @@ def main():
 
                     print(f"Creating branch {branch_name}")
 
-                    # subprocess.run(
-                    #     ["git", "switch", "-c", branch_name],
-                    #     stdout=subprocess.PIPE,
-                    #     text=True,
-                    # )
-                    #
-                    # subprocess.run(
-                    #     ["git", "push", "-u", "origin", branch_name],
-                    #     stdout=subprocess.PIPE,
-                    #     text=True,
-                    # )
+                    subprocess.run(
+                        ["git", "switch", "-c", branch_name],
+                        stdout=subprocess.PIPE,
+                        text=True,
+                    )
+
+                    subprocess.run(
+                        ["git", "push", "-u", "origin", branch_name],
+                        stdout=subprocess.PIPE,
+                        text=True,
+                    )
 
                     if not os.path.exists(".git/devops"):
                         os.makedirs(".git/devops")
