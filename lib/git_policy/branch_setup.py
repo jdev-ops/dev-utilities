@@ -89,6 +89,9 @@ def main():
     #     all_issues = cattrs.structure(response.json(), Issues).issues
     # except cattrs.errors.ClassValidationError as ve:
     #     print(f"Incorrect response from: {API_URL}")
+    # print("===========================================")
+    # print(response.json())
+    # print("===========================================")
 
     all_issues = cattrs.structure(response.json(), Issues).issues
     options = {}
@@ -96,7 +99,7 @@ def main():
         if (
             issue.fields.assignee is not None
             and issue.fields.status.name == JIRA_TASK_STATUS_VALUE
-            and issue.fields.assignee.emailAddress == JIRA_TASKS_EMAIL
+            and ( issue.fields.assignee.emailAddress is not None and issue.fields.assignee.emailAddress == JIRA_TASKS_EMAIL)
         ):
             options.update({issue.key: issue.fields.summary})
 
