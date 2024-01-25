@@ -1,0 +1,72 @@
+= dev-utilities tool
+:imagesdir: docs
+
+== Install
+
+Install gum:
+
+https://github.com/charmbracelet/gum
+
+
+Install dev-utilities:
+
+[source,bash]
+----
+pip install dev-utilities
+----
+
+== Setup
+
+[source,bash]
+----
+setup
+----
+
+== Environment variables needed
+
+[cols="1,1,1"]
+|===
+|Variable name |Description |default value
+
+|TASKS_TYPES
+|Predefined tasks types
+|feat\|fix\|bugfix\|config\|refactor\|build\|ci\|docs\|test
+
+|TASKS_KEYS
+|Jira tasks regex
+|
+
+|DOMAIN_PREFIX
+|Jira tasks prefix
+|
+
+|JIRA_EMAIL
+|User email
+|
+
+|JIRA_TOKEN
+|Jira user token
+|
+
+|JIRA_BASE_URL
+|Jira base url
+|
+
+|CHECK_SIGNED_COMMITS
+|Apply check for signed commits
+|true
+
+|PUSH_TO_REMOTE
+|Push to remote after branch setup
+|false
+
+|===
+
+== How to set environment variables
+
+image::env-vars-search-path.svg[align="center",width="100%"]
+
+[NOTE]
+====
+These utilities respect the unix way. Therefore, environment variables have precedence over config files.
+====

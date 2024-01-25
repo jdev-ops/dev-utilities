@@ -1,0 +1,26 @@
+
+# https://devpi.net/docs/devpi/devpi/stable/+doc/quickstart-releaseprocess.html#installing-devpi-client-and-server
+
+devpi-init
+
+# optional
+devpi-gen-config
+
+# start server
+.venv/bin/devpi-server
+
+devpi use http://localhost:3141
+devpi user -c testuser password=123
+
+# need login
+devpi index -c dev bases=root/pypi
+
+devpi login testuser --password=123
+devpi use testuser/dev
+
+twine upload --repository privatepypi dist/*
+
+twine upload --repository testpypi dist/*
+
+pip install --index http://localhost:3141/testuser/dev/ dev-utilities
+pip search --index http://localhost:3141/testuser/dev/ dev-utilities

@@ -1,0 +1,12 @@
+- id: check-branch-name
+  name: check branch name style
+  entry: check-branch-name
+  language: python
+- id: check-commits-are-signed
+  name: check that commits are signed
+  entry: check-commits-are-signed
+  language: python
+- id: prepare-commit-msg-from-jira-issue
+  name: prepare commit msg from jira issue
+  entry: prepare-commit-msg-from-jira-issue
+  language: python

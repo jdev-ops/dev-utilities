@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+branches=($(git for-each-ref --format='%(refname:short)' refs/heads/))
+export GUM_CHOOSE_HEADER="Choose base branch:"
+a=$(gum choose "${branches[@]}")
+mkdir -p .git/devops
+echo -n $a > .git/devops/base_branch

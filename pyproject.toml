@@ -1,0 +1,82 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dev-utilities"
+dynamic = ["version"]
+description = ''
+readme = "README.txt"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = []
+authors = [
+    { name = "José Albert Cruz Almaguer", email = "jalbertcruz@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+    "cattrs~=23.2.3",
+    "GitPython~=3.1.41",
+    "jinja2~=3.1.3",
+    "python-decouple~=3.8",
+    "python-slugify~=8.0.1",
+    "requests~=2.31.0",
+    "typer~=0.9.0",
+    "pydot~=2.0.0",
+]
+
+[project.urls]
+Source = "https://github.com/jdev-ops/dev-utilities"
+
+[project.scripts]
+# pre-commit
+check-branch-name = "git_policy_jira.check_branch_name:main"
+# pre-push
+check-commits-are-signed = "git_policy_jira.check_commits_are_signed:main"
+# prepare-commit-msg
+prepare-commit-msg-from-jira-issue = "git_policy_jira.prepare_commit_msg_from_jira_issue:main"
+dot2d2 = "dev_conversors.main:dot_to_d2"
+non-jira-branch = "git_policy_jira.create_non_jira_branch:main"
+
+[tool.hatch.version]
+path = "src/dev_utilities/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+    "coverage[toml]>=6.5",
+    "pytest",
+]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.types]
+dependencies = [
+    "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/dev_utilities tests}"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "bin/*",
+    "devpi/*",
+]
+include = [
+    "src/",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/dev_conversors",
+    "src/git_policy_jira",
+    "src/dev_utilities",
+]
+
+[dirs.env]
+virtual = ".venv"
