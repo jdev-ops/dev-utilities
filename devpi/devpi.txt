@@ -19,8 +19,8 @@ devpi login testuser --password=123
 devpi use testuser/dev
 
 twine upload --repository privatepypi dist/*
-
 twine upload --repository testpypi dist/*
+twine upload --repository pypi dist/*
 
 pip install --index http://localhost:3141/testuser/dev/ dev-utilities
 pip search --index http://localhost:3141/testuser/dev/ dev-utilities

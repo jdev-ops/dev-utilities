@@ -1,12 +1,15 @@
 - id: check-branch-name
   name: check branch name style
   entry: check-branch-name
+  stages: [pre-commit]
   language: python
 - id: check-commits-are-signed
   name: check that commits are signed
   entry: check-commits-are-signed
+  stages: [pre-push]
   language: python
 - id: prepare-commit-msg-from-jira-issue
   name: prepare commit msg from jira issue
   entry: prepare-commit-msg-from-jira-issue
+  stages: [prepare-commit-msg]
   language: python
