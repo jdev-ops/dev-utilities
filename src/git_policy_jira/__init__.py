@@ -25,7 +25,8 @@ class Assignee:
                                 default=None,
                                 validator=attrs.validators.optional(
                                     attrs.validators.instance_of(str)
-                                ))
+                                )
+    )
 
 
 @define

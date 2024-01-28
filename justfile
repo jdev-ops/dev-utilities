@@ -4,16 +4,11 @@ set positional-arguments
 set dotenv-load
 set export
 
-default: req
-
 shfmt:
 	shfmt -i 2 -l -w bin/*
 
 pyfmt:
 	black src/
-
-req:
-	pip install -r requirements/dev.txt
 
 build:
     #!/usr/bin/env python

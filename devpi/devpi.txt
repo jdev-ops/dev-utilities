@@ -16,6 +16,7 @@ devpi user -c testuser password=123
 devpi index -c dev bases=root/pypi
 
 devpi login testuser --password=123
+
 devpi use testuser/dev
 
 twine upload --repository privatepypi dist/*
