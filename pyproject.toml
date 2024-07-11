@@ -35,13 +35,13 @@ Source = "https://github.com/jdev-ops/dev-utilities"
 
 [project.scripts]
 # pre-commit
-check-branch-name = "git_policy_jira.check_branch_name:main"
+check-branch-name = "dev_utilities.git_policy_jira.check_branch_name:main"
 # pre-push
-check-commits-are-signed = "git_policy_jira.check_commits_are_signed:main"
+check-commits-are-signed = "dev_utilities.git_policy_jira.check_commits_are_signed:main"
 # prepare-commit-msg
-prepare-commit-msg-from-jira-issue = "git_policy_jira.prepare_commit_msg_from_jira_issue:main"
-dot2d2 = "dev_conversors.main:dot_to_d2"
-non-jira-branch = "git_policy_jira.create_non_jira_branch:main"
+prepare-commit-msg-from-jira-issue = "dev_utilities.git_policy_jira.prepare_commit_msg_from_jira_issue:main"
+dot2d2 = "dev_utilities.dev_conversors.main:dot_to_d2"
+non-jira-branch = "dev_utilities.git_policy_jira.create_non_jira_branch:main"
 
 [tool.hatch.version]
 path = "src/dev_utilities/__about__.py"
@@ -70,13 +70,13 @@ exclude = [
 include = [
     "src/",
 ]
+core-metadata-version = "2.2"
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "src/dev_conversors",
-    "src/git_policy_jira",
     "src/dev_utilities",
 ]
+core-metadata-version = "2.2"
 
 [dirs.env]
 virtual = ".venv"

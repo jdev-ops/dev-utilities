@@ -8,10 +8,12 @@ from pathlib import Path
 from decouple import config as decouple_config
 from decouple import Config, RepositoryEnv
 
+CONFIG_WORKING_DIR = os.environ.get("CONFIG_WORKING_DIR", ".")
+
 if os.environ.get("CONFIG_PATH"):
     config = Config(RepositoryEnv(os.environ["CONFIG_PATH"]))
-elif Path(".env.local").is_file():
-    config = Config(RepositoryEnv(".env.local"))
+elif Path(f"{CONFIG_WORKING_DIR}/.env.local").is_file():
+    config = Config(RepositoryEnv(f"{CONFIG_WORKING_DIR}/.env.local"))
 else:
     config = decouple_config
 

@@ -4,7 +4,7 @@ import re
 import sys
 import typer
 
-from git_policy_jira.create_branch_from_jira_issue import main
+from dev_utilities.git_policy_jira.create_branch_from_jira_issue import main
 
 if __name__ == '__main__':
     typer.run(main)
