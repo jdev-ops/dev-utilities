@@ -7,27 +7,38 @@ name = "dev-utilities"
 dynamic = ["version"]
 description = ''
 readme = "README.txt"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 license = "MIT"
 keywords = []
 authors = [
     { name = "José Albert Cruz Almaguer", email = "jalbertcruz@gmail.com" },
 ]
 classifiers = [
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 dependencies = [
-    "cattrs~=23.2.3",
-    "GitPython~=3.1.41",
-    "jinja2~=3.1.3",
+    "cattrs~=24.1.2",
     "python-decouple~=3.8",
-    "python-slugify~=8.0.1",
-    "requests~=2.31.0",
-    "typer~=0.9.0",
-    "pydot~=2.0.0",
+    "typer~=0.15.1",
+    "rich~=13.9.4",
+    "more-itertools~=10.5.0",
+    "GitPython~=3.1.43",
+    "jinja2~=3.1.5",
+    "python-slugify~=8.0.4",
+    "requests~=2.32.3",
+    "pydot~=3.0.3",
+    "more-itertools>=10.5.0",
+    "pynvim>=0.5.2",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright~=1.23.1",
+    "black~=24.10.0",
+    "pylint~=3.3.3",
+    "coverage[toml]>=7.6.10",
+    "pytest>=8.3.4",
 ]
 
 [project.urls]
@@ -42,18 +53,21 @@ check-commits-are-signed = "dev_utilities.git_policy_jira.check_commits_are_sign
 prepare-commit-msg-from-jira-issue = "dev_utilities.git_policy_jira.prepare_commit_msg_from_jira_issue:main"
 dot2d2 = "dev_utilities.dev_conversors.main:dot_to_d2"
 non-jira-branch = "dev_utilities.git_policy_jira.create_non_jira_branch:main"
+_elf-package = "dev_utilities.reverse_engineering.elf_dependency_finder:run"
+_update-lazyvim-json = "dev_utilities.nvim.update_lazyvim_json:run"
+_nvim-scala-compile-quickfix-loader = "dev_utilities.nvim.scala_compile_quickfix_loader:run"
 
 [tool.hatch.version]
 path = "src/dev_utilities/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
-    "coverage[toml]>=6.5",
+    "coverage[toml]",
     "pytest",
 ]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.10", "3.11", "3.12"]
+python = ["3.13"]
 
 [tool.hatch.envs.types]
 dependencies = [
@@ -70,13 +84,9 @@ exclude = [
 include = [
     "src/",
 ]
-core-metadata-version = "2.2"
+#core-metadata-version = "2.2"
 
 [tool.hatch.build.targets.wheel]
 packages = [
     "src/dev_utilities",
 ]
-core-metadata-version = "2.2"
-
-[dirs.env]
-virtual = ".venv"

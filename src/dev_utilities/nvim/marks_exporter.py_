@@ -1,0 +1,19 @@
+import json
+import os
+import sys
+
+# python3 a.py (pwd) "/home/coder/temp/src"
+# python3 a.py "/home/coder/temp/src" "/home/coder/temp/src2"
+# rewrite marks files path
+path  = os.getenv("MARKS_FILE_PATH", "error")
+if path != "error":
+    marks = json.load(open(path))
+    prefix = sys.argv[1]
+    prefix2 = sys.argv[2]
+    for mark in marks:
+        if mark["file"].startswith(prefix):
+            new_file = mark["file"]
+            new_file = f"{prefix2}{new_file[len(prefix):]}"
+            mark["file"] = new_file
+        print(mark)
+    open(f"{path}_", "w").write(json.dumps(marks))
