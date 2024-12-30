@@ -42,13 +42,13 @@ import typer
 
 
 def main(elf_file : str,
-         dest_folder : str = './elfs',
-         tar_file_path : str = './packed-elfs.tar.gz',
+         dest_folder : str = './elfs-deps',
+         tar_file_path : str = './packed-elf-deps.tar.gz',
          ):
 
     all_dependencies = get_all_dependencies(elf_file)
     copy_dependencies(all_dependencies, dest_folder)
-    create_tar_file(dest_folder, tar_file_path)
+    # create_tar_file(dest_folder, tar_file_path)
 
     print(f"All dependencies have been copied to {dest_folder} and archived in {tar_file_path}")
 
