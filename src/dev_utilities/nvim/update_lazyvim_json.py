@@ -1,11 +1,13 @@
 import json
 import os
+
 from more_itertools import flatten
 
 
 def is_active(var: str) -> bool:
     res = os.environ.get(var)
     return res == "true" if res else False
+
 
 def run():
     prefix = "lazyvim.plugins.extras."

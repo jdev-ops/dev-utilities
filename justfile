@@ -4,11 +4,13 @@ set positional-arguments
 set dotenv-load
 set export
 
-shfmt:
-	shfmt -i 2 -l -w bin/*
+fmt-sh:
+    # Format shell scripts in the bin directory
+    shfmt -i 2 -l -w bin/*
 
-pyfmt:
-	black src/
+fmt-py:
+    ruff check --select I --fix
+    ruff format
 
 publish:
     hatch build --clean

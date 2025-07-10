@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 from pathlib import Path
-from decouple import config as decouple_config
+
 from decouple import Config, RepositoryEnv
+from decouple import config as decouple_config
 
 CONFIG_WORKING_DIR = os.environ.get("CONFIG_WORKING_DIR", ".")
 
@@ -52,8 +53,8 @@ except subprocess.CalledProcessError as e:
     if ACTIVE_SIGNING_KEY:
         git_executable += ["--config-env=user.signingKey=ACTIVE_SIGNING_KEY"]
 
-def main():
 
+def main():
     CHECK_SIGNED_COMMITS = config("CHECK_SIGNED_COMMITS", cast=bool, default=True)
     if not CHECK_SIGNED_COMMITS:
         sys.exit(0)

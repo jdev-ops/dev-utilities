@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-import sys
-import re
 import os
-from git import Repo
+import re
+import sys
 from pathlib import Path
-from decouple import config as decouple_config
+
 from decouple import Config, RepositoryEnv
+from decouple import config as decouple_config
+from git import Repo
 
 CONFIG_WORKING_DIR = os.environ.get("CONFIG_WORKING_DIR", ".")
 
@@ -16,6 +17,7 @@ elif Path(f"{CONFIG_WORKING_DIR}/.env.local").is_file():
     config = Config(RepositoryEnv(f"{CONFIG_WORKING_DIR}/.env.local"))
 else:
     config = decouple_config
+
 
 def main():
     TASKS_TYPES = config(

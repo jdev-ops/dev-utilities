@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-import sys
 import os
+import sys
+from pathlib import Path
+
+from decouple import Config, RepositoryEnv
+from decouple import config as decouple_config
 from git import Repo
 from slugify import slugify
-
-from pathlib import Path
-from decouple import config as decouple_config
-from decouple import Config, RepositoryEnv
 
 CONFIG_WORKING_DIR = os.environ.get("CONFIG_WORKING_DIR", ".")
 
@@ -18,6 +18,7 @@ elif Path(f"{CONFIG_WORKING_DIR}/.env.local").is_file():
 else:
     config = decouple_config
 
+
 def main():
     if len(sys.argv) > 2:  # amended commit
         print("Amending commit, skipping")
@@ -26,7 +27,9 @@ def main():
         repo = Repo(".")
         branch_name = str(repo.active_branch)
         if os.path.exists(f"{CONFIG_WORKING_DIR}/.git/devops/.{slugify(branch_name)}"):
-            template = open(f"{CONFIG_WORKING_DIR}/.git/devops/.{slugify(branch_name)}").read()
+            template = open(
+                f"{CONFIG_WORKING_DIR}/.git/devops/.{slugify(branch_name)}"
+            ).read()
         else:
             template = f""
         open(sys.argv[-1], "w").write(template)

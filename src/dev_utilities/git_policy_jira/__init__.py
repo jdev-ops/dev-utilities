@@ -1,6 +1,6 @@
-from attrs import define, field
-import cattrs
 import attrs
+import cattrs
+from attrs import define, field
 
 
 @define
@@ -22,10 +22,8 @@ class Status:
 @define
 class Assignee:
     emailAddress: str | None = field(
-                                default=None,
-                                validator=attrs.validators.optional(
-                                    attrs.validators.instance_of(str)
-                                )
+        default=None,
+        validator=attrs.validators.optional(attrs.validators.instance_of(str)),
     )
 
 

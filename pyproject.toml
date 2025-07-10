@@ -23,26 +23,25 @@ dependencies = [
     "typer~=0.15.1",
     "rich~=13.9.4",
     "more-itertools~=10.5.0",
-    "GitPython~=3.1.43",
+    "GitPython~=3.1.44",
     "jinja2~=3.1.5",
     "python-slugify~=8.0.4",
     "requests~=2.32.3",
     "pydot~=3.0.3",
     "more-itertools>=10.5.0",
     "pynvim>=0.5.2",
+    "docker~=7.1.0",
+    "PyYAML~=6.0.2",
 ]
 
 [dependency-groups]
 dev = [
-    "basedpyright~=1.23.1",
-    "black~=24.10.0",
-    "pylint~=3.3.3",
     "coverage[toml]>=7.6.10",
     "pytest>=8.3.4",
 ]
 
 [project.urls]
-Source = "https://github.com/jdev-ops/dev-utilities"
+source = "https://github.com/jdev-ops/dev-utilities"
 
 [project.scripts]
 # pre-commit
@@ -56,6 +55,7 @@ non-jira-branch = "dev_utilities.git_policy_jira.create_non_jira_branch:main"
 _to-package-elf-deps = "dev_utilities.reverse_engineering.elf_dependency_finder:run"
 _update-lazyvim-json = "dev_utilities.nvim.update_lazyvim_json:run"
 _nvim-scala-compile-quickfix-loader = "dev_utilities.nvim.scala_compile_quickfix_loader:run"
+_boxes-names = "dev_utilities.containers.pdi.docker_setup:boxes_names"
 
 [tool.hatch.version]
 path = "src/dev_utilities/__about__.py"

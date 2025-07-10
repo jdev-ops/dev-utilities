@@ -1,13 +1,13 @@
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 from pathlib import Path
 
-from slugify import slugify
-from decouple import config as decouple_config
-from decouple import Config, RepositoryEnv
-from git import Repo
 import cattrs
+from decouple import Config, RepositoryEnv
+from decouple import config as decouple_config
+from git import Repo
+from slugify import slugify
 
 from dev_utilities.git_policy_jira import *
 
@@ -19,6 +19,7 @@ elif Path(f"{CONFIG_WORKING_DIR}/.env.local").is_file():
     config = Config(RepositoryEnv(f"{CONFIG_WORKING_DIR}/.env.local"))
 else:
     config = decouple_config
+
 
 def main():
     base_branch = open(f"{CONFIG_WORKING_DIR}/.git/devops/base_branch").read().strip()
@@ -48,9 +49,7 @@ def main():
 
         match result.stdout.strip():
             case "Description":
-                my_env[
-                    "GUM_INPUT_HEADER"
-                ] = f"Enter the description:"
+                my_env["GUM_INPUT_HEADER"] = f"Enter the description:"
                 my_env["GUM_INPUT_WIDTH"] = "0"
                 desc = description
                 if desc == "":
@@ -107,8 +106,10 @@ def main():
 
                     if not os.path.exists(f"{CONFIG_WORKING_DIR}/.git/devops"):
                         os.makedirs(f"{CONFIG_WORKING_DIR}/.git/devops")
-                    open(f"{CONFIG_WORKING_DIR}/.git/devops/.{slugify(branch_name)}", "w").write(
-                        f"""{values['Type']}: [{values['Task selection']}] {description}
+                    open(
+                        f"{CONFIG_WORKING_DIR}/.git/devops/.{slugify(branch_name)}", "w"
+                    ).write(
+                        f"""{values["Type"]}: [{values["Task selection"]}] {description}
 
 """
                     )

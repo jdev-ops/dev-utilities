@@ -1,6 +1,7 @@
-import pydot
-from jinja2 import Environment, DictLoader
 import sys
+
+import pydot
+from jinja2 import DictLoader, Environment
 
 d2_template = """
 direction: right

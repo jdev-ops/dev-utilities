@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import re
+import sys
+import typer
+
+from dev_utilities.containers.pdi.docker_setup import run_box
+
+if __name__ == '__main__':
+    typer.run(run_box)
