@@ -109,6 +109,7 @@ def run_box(box_name: Annotated[str, typer.Argument()]) -> int:
     volume_name = f"{name}-volume"
 
     try:
+        # https://docker-py.readthedocs.io/en/stable/volumes.html
         client.volumes.get(volume_name)
     except docker.errors.NotFound:
         client.volumes.create(
@@ -116,8 +117,12 @@ def run_box(box_name: Annotated[str, typer.Argument()]) -> int:
             driver="local",
         )
 
+    # https://docker-py.readthedocs.io/en/stable/api.html#docker.types.Mount
     state_volume = Mount(
         source=volume_name, target="/home/app/.local/state", type="volume"
+    )
+    apps_volume = Mount(
+        source=f"{os.environ.get("HOME")}/appslnx/", target="/home/app/appslnx", type="bind"
     )
     try:
         client.containers.get(name)
@@ -126,7 +131,7 @@ def run_box(box_name: Annotated[str, typer.Argument()]) -> int:
             name=name,
             hostname=box.host,
             image=box.image,
-            mounts=[state_volume],
+            mounts=[state_volume, apps_volume],
             detach=True,
             auto_remove=True,
             dns=["10.5.0.3", "8.8.8.8"],
