@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import typer
 
-from dev_utilities.containers.pdi.docker_setup import run_box
+from dev_utilities.toml import main
 
 if __name__ == '__main__':
-    typer.run(run_box)
+    typer.run(main)

@@ -100,8 +100,8 @@ from docker.types import Mount
 
 
 def run_box(box_name: Annotated[str, typer.Argument()]) -> int:
-    posible_values = load_boxes()
-    box = posible_values.get(box_name.strip())
+    possible_values = load_boxes()
+    box = possible_values.get(box_name.strip())
     client = docker.DockerClient(base_url="unix://run/user/1000/docker.sock")
     # https://docker-py.readthedocs.io/en/stable/containers.html
     box_name = box_name.strip()
