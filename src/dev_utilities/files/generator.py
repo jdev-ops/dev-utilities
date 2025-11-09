@@ -46,9 +46,10 @@ class FileStructureGenerator:
         self.env = Environment(trim_blocks=True)
 
     def run(self):
-        base_path = Path(self.select_template())
-        last_selection_path = base_path.parent / "last-selection.json"
-        choices_path = base_path.parent / "choices.json"
+        template = self.select_template()
+        base_path = Path(template)
+        last_selection_path = Path(f"{template}-last-selection.json")
+        choices_path = Path(f"{template}-choices.json")
         choices = json.loads(open(choices_path).read()) if choices_path.exists() else {}
         options = []
         context = {}
@@ -100,14 +101,21 @@ class FileStructureGenerator:
                     options.append(apply)
         if current_selection == load_last_selection_option:
             context = json.loads(open(last_selection_path).read())
-        base_dest = Path(self.env.from_string(base_path.parts[-1]).render(context))
+        base_dest = Path(os.getcwd()) / Path(
+            self.env.from_string(base_path.parts[-1]).render(context)
+        )
         self.generate(base_path, base_dest, self.env, context)
+        open(last_selection_path, "w").write(json.dumps(context))
 
     def generate(
         self, base_path: Path, base_dest: Path, env: Environment, context: dict
     ):
         for root, dirs, files in os.walk(base_path, onerror=_on_error, topdown=True):
-            target_path = base_dest / env.from_string(root).render(context)
+            target_path = env.from_string(root).render(context)
+            target_path = Path(target_path)
+            rest = target_path.parts[len(base_path.parts) :]
+            target_path = Path(*base_dest.parts + rest)
+
             os.makedirs(target_path, exist_ok=True)
             for filename in files:
                 rendered_filename = env.from_string(filename).render(context)
