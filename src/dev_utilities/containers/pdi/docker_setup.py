@@ -122,7 +122,9 @@ def run_box(box_name: Annotated[str, typer.Argument()]) -> int:
         source=volume_name, target="/home/app/.local/state", type="volume"
     )
     apps_volume = Mount(
-        source=f"{os.environ.get("HOME")}/appslnx/", target="/home/app/appslnx", type="bind"
+        source=f"{os.environ.get('HOME')}/appslnx/",
+        target="/home/app/appslnx",
+        type="bind",
     )
     try:
         client.containers.get(name)
