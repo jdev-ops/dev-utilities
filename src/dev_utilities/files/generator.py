@@ -1,23 +1,9 @@
-# env = Environment()
-# # ast = env.parse('{% set foo = 42 %}{{ bar + foo }}')
-# str1 = """
-# {{ foo }}
-# """
-# str2 = """
-# {% for item in navigation %}
-#         <li><a href="{{ item.href }}">{{ item.caption }}</a></li>
-# {% endfor %}
-# """
-# ast = env.parse(str2)
-# res = meta.find_undeclared_variables(ast)
-# print(res)
 import ast
 import json
 import os
-import shutil
 import subprocess
+from abc import ABC
 from pathlib import Path
-from typing import Annotated
 
 import typer
 from decouple import Config, RepositoryEnv
@@ -34,7 +20,48 @@ else:
     config = decouple_config
 
 
-# Travers all the branch of a specified path
+class UX(ABC):
+    def choose(self, options, header="Choose"):
+        pass
+
+    def multiple_choose(self, options, header="Choose"):
+        pass
+
+    def input(self, placeholder):
+        pass
+
+
+class GumUX(UX):
+    def choose(self, options, header="Choose"):
+        if len(options) == 1:
+            return options[0]
+        menu = [f'"{t}"' for t in options]
+        menu = " ".join(menu)
+        current_selection = subprocess.check_output(
+            [f"gum choose {menu}"], text=True, shell=True
+        ).strip()
+        return current_selection
+
+    def multiple_choose(self, options, header="Choose"):
+        menu = [f'"{t}"' for t in options]
+        menu = " ".join(menu)
+        selection_from_choices = subprocess.check_output(
+            [f"gum choose --no-limit --header {header} {menu}"],
+            text=True,
+            shell=True,
+        ).strip()
+        return selection_from_choices
+
+    def input(self, placeholder):
+        value = subprocess.check_output(
+            [f"gum input --placeholder {placeholder}"],
+            text=True,
+            shell=True,
+        ).strip()
+        return value
+
+
+# Traverse all the branch of a specified path
 # https://www.w3schools.com/python/ref_os_walk.asp
 def _on_error(err):
     print(f"Error with: {err}")
@@ -44,6 +71,7 @@ class FileStructureGenerator:
     def __init__(self, templates: list[str]):
         self.templates = templates
         self.env = Environment(trim_blocks=True)
+        self.ux = GumUX()
 
     def run(self):
         template = self.select_template()
@@ -62,24 +90,14 @@ class FileStructureGenerator:
         options.extend(variables_entries.keys())
         current_selection = ""
         while current_selection not in [apply, load_last_selection_option]:
-            menu = [f'"{t}"' for t in options]
-            menu = " ".join(menu)
-            current_selection = subprocess.check_output(
-                [f"gum choose {menu}"], text=True, shell=True
-            ).strip()
+            current_selection = self.ux.choose(options=options)
             if current_selection in variables_entries.keys():
                 param_to_set = variables_entries[current_selection]
                 if param_to_set in choices:
                     local_options = choices[param_to_set]
-                    menu = [f'"{t}"' for t in local_options]
-                    menu = " ".join(menu)
-                    selection_from_choices = subprocess.check_output(
-                        [
-                            f'gum choose --no-limit --header "Setting {param_to_set}" {menu}'
-                        ],
-                        text=True,
-                        shell=True,
-                    ).strip()
+                    selection_from_choices = self.ux.multiple_choose(
+                        local_options, header="Setting {param_to_set}"
+                    )
                     if selection_from_choices:
                         context[param_to_set] = [
                             ast.literal_eval(literal_str)
@@ -88,11 +106,7 @@ class FileStructureGenerator:
                         options = []
                         options.extend(variables_entries.keys())
                 else:
-                    value = subprocess.check_output(
-                        [f"gum input --placeholder {param_to_set}"],
-                        text=True,
-                        shell=True,
-                    ).strip()
+                    value = self.ux.input(param_to_set)
                     if value:
                         context[param_to_set] = value
                         options = []
@@ -141,13 +155,7 @@ class FileStructureGenerator:
         return result
 
     def select_template(self):
-        if len(self.templates) == 1:
-            return self.templates[0]
-        templates = [f'"{t}"' for t in self.templates]
-        templates = " ".join(templates)
-        return subprocess.check_output(
-            [f"gum choose {templates}"], text=True, shell=True
-        ).strip()
+        return self.ux.choose(self.templates)
 
 
 def main():
