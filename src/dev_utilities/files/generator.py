@@ -46,7 +46,7 @@ class GumUX(UX):
         menu = [f'"{t}"' for t in options]
         menu = " ".join(menu)
         selection_from_choices = subprocess.check_output(
-            [f"gum choose --no-limit --header {header} {menu}"],
+            [f'gum choose --no-limit --header "{header}" {menu}'],
             text=True,
             shell=True,
         ).strip()
@@ -54,7 +54,37 @@ class GumUX(UX):
 
     def input(self, placeholder):
         value = subprocess.check_output(
-            [f"gum input --placeholder {placeholder}"],
+            [f'gum input --placeholder "{placeholder}"'],
+            text=True,
+            shell=True,
+        ).strip()
+        return value
+
+
+class RofiUX(UX):
+    def choose(self, options, header="Choose"):
+        if len(options) == 1:
+            return options[0]
+        menu = [f"{t}" for t in options]
+        menu = "\n".join(menu)
+        current_selection = subprocess.check_output(
+            ["rofi -dmenu"], text=True, shell=True, input=menu
+        ).strip()
+        return current_selection
+
+    def multiple_choose(self, options, header="Choose"):
+        if len(options) == 1:
+            return options[0]
+        menu = [f"{t}" for t in options]
+        menu = "\n".join(menu)
+        current_selection = subprocess.check_output(
+            ["rofi -dmenu -multi-select"], text=True, shell=True, input=menu
+        ).strip()
+        return current_selection
+
+    def input(self, placeholder):
+        value = subprocess.check_output(
+            [f'rofi -dmenu -p "{placeholder}"'],
             text=True,
             shell=True,
         ).strip()
@@ -71,7 +101,13 @@ class FileStructureGenerator:
     def __init__(self, templates: list[str]):
         self.templates = templates
         self.env = Environment(trim_blocks=True)
-        self.ux = GumUX()
+
+        ux_type = config("PROJECTS_GENERATOR_UI", default="gum")
+        match ux_type:
+            case "gum":
+                self.ux = GumUX()
+            case "rofi":
+                self.ux = RofiUX()
 
     def run(self):
         template = self.select_template()
@@ -82,7 +118,9 @@ class FileStructureGenerator:
         options = []
         context = {}
         load_last_selection_option = "Use parameters from last execution"
+        exist_load_last_selection_option = True
         apply = "Apply selected parameters"
+        exist_apply = False
         if last_selection_path.exists():
             options.append(load_last_selection_option)
         variables = self.get_vars(base_path, self.env)
@@ -96,23 +134,29 @@ class FileStructureGenerator:
                 if param_to_set in choices:
                     local_options = choices[param_to_set]
                     selection_from_choices = self.ux.multiple_choose(
-                        local_options, header="Setting {param_to_set}"
+                        local_options, header=f"Setting {param_to_set}"
                     )
                     if selection_from_choices:
                         context[param_to_set] = [
                             ast.literal_eval(literal_str)
                             for literal_str in selection_from_choices.split("\n")
                         ]
-                        options = []
-                        options.extend(variables_entries.keys())
+                        if exist_load_last_selection_option:
+                            options = options[1:]
+                            exist_load_last_selection_option = False
                 else:
-                    value = self.ux.input(param_to_set)
+                    value = self.ux.input(f"Enter {param_to_set}")
                     if value:
                         context[param_to_set] = value
-                        options = []
-                        options.extend(variables_entries.keys())
-                if variables.difference(set(context.keys())) == set():
+                        if exist_load_last_selection_option:
+                            options = options[1:]
+                            exist_load_last_selection_option = False
+                if (
+                    variables.difference(set(context.keys())) == set()
+                    and not exist_apply
+                ):
                     options.append(apply)
+                    exist_apply = True
         if current_selection == load_last_selection_option:
             context = json.loads(open(last_selection_path).read())
         base_dest = Path(os.getcwd()) / Path(
