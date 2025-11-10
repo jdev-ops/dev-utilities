@@ -141,14 +141,14 @@ class FileStructureGenerator:
                             ast.literal_eval(literal_str)
                             for literal_str in selection_from_choices.split("\n")
                         ]
-                        if exist_load_last_selection_option:
+                        if exist_load_last_selection_option and last_selection_path.exists():
                             options = options[1:]
                             exist_load_last_selection_option = False
                 else:
                     value = self.ux.input(f"Enter {param_to_set}")
                     if value:
                         context[param_to_set] = value
-                        if exist_load_last_selection_option:
+                        if exist_load_last_selection_option and last_selection_path.exists():
                             options = options[1:]
                             exist_load_last_selection_option = False
                 if (
@@ -163,7 +163,7 @@ class FileStructureGenerator:
             self.env.from_string(base_path.parts[-1]).render(context)
         )
         self.generate(base_path, base_dest, self.env, context)
-        open(last_selection_path, "w").write(json.dumps(context))
+        open(last_selection_path, "w").write(json.dumps(context, indent=2))
 
     def generate(
         self, base_path: Path, base_dest: Path, env: Environment, context: dict
