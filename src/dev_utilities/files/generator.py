@@ -96,11 +96,12 @@ class RofiUX(UX):
 def _on_error(err):
     print(f"Error with: {err}")
 
-
 class FileStructureGenerator:
     def __init__(self, templates: list[str]):
         self.templates = templates
         self.env = Environment(trim_blocks=True)
+        # https://jinja.palletsprojects.com/en/stable/templates/#filters
+        # self.env.filters["capitalize2"] = capitalize
 
         ux_type = config("PROJECTS_GENERATOR_UI", default="gum")
         match ux_type:
