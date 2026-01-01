@@ -2,8 +2,9 @@ import ast
 import json
 import os
 import subprocess
-from abc import ABC
 from pathlib import Path
+
+from dev_utilities.ux import GumUX, RofiUX
 
 import typer
 from decouple import Config, RepositoryEnv
@@ -18,77 +19,6 @@ elif Path(f"{CONFIG_WORKING_DIR}/.env.local").is_file():
     config = Config(RepositoryEnv(f"{CONFIG_WORKING_DIR}/.env.local"))
 else:
     config = decouple_config
-
-
-class UX(ABC):
-    def choose(self, options, header="Choose"):
-        pass
-
-    def multiple_choose(self, options, header="Choose"):
-        pass
-
-    def input(self, placeholder):
-        pass
-
-
-class GumUX(UX):
-    def choose(self, options, header="Choose"):
-        if len(options) == 1:
-            return options[0]
-        menu = [f'"{t}"' for t in options]
-        menu = " ".join(menu)
-        current_selection = subprocess.check_output(
-            [f"gum choose {menu}"], text=True, shell=True
-        ).strip()
-        return current_selection
-
-    def multiple_choose(self, options, header="Choose"):
-        menu = [f'"{t}"' for t in options]
-        menu = " ".join(menu)
-        selection_from_choices = subprocess.check_output(
-            [f'gum choose --no-limit --header "{header}" {menu}'],
-            text=True,
-            shell=True,
-        ).strip()
-        return selection_from_choices
-
-    def input(self, placeholder):
-        value = subprocess.check_output(
-            [f'gum input --placeholder "{placeholder}"'],
-            text=True,
-            shell=True,
-        ).strip()
-        return value
-
-
-class RofiUX(UX):
-    def choose(self, options, header="Choose"):
-        if len(options) == 1:
-            return options[0]
-        menu = [f"{t}" for t in options]
-        menu = "\n".join(menu)
-        current_selection = subprocess.check_output(
-            ["rofi -dmenu"], text=True, shell=True, input=menu
-        ).strip()
-        return current_selection
-
-    def multiple_choose(self, options, header="Choose"):
-        if len(options) == 1:
-            return options[0]
-        menu = [f"{t}" for t in options]
-        menu = "\n".join(menu)
-        current_selection = subprocess.check_output(
-            ["rofi -dmenu -multi-select"], text=True, shell=True, input=menu
-        ).strip()
-        return current_selection
-
-    def input(self, placeholder):
-        value = subprocess.check_output(
-            [f'rofi -dmenu -p "{placeholder}"'],
-            text=True,
-            shell=True,
-        ).strip()
-        return value
 
 
 # Traverse all the branch of a specified path

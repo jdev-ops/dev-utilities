@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+matches:{% for t in templates %}
+  - trigger: ":{{ t.trigger }}"
+{% raw %}    replace: "{{output}}"{% endraw %}
+    vars:
+      - name: output
+        type: shell
+        depends_on: ["templates"]
+        params:
+          cmd: "cat $ESPANSO_TEMPLATES/{{ t.file_name }}"{% endfor %}
